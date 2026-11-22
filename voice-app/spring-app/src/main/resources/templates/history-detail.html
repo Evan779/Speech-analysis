@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Saved recording')}"></head>
+<body th:attr="data-src=@{/api/history/{id}/analysis(id=${item.id})}">
+<header th:replace="~{fragments :: topbar}"></header>
+<main>
+  <p><a th:href="@{/history}">Back to history</a></p>
+  <h1>Recording from <span th:text="${#temporals.format(item.createdAt, 'd MMM yyyy, HH:mm')}"></span></h1>
+
+  <h2>Transcript</h2>
+  <div class="transcript" th:text="${item.editedText}"></div>
+  <details th:if="${item.editedText != item.whisperText}">
+    <summary>Show Whisper's original text</summary>
+    <div class="transcript" th:text="${item.whisperText}"></div>
+  </details>
+
+  <h2 style="margin-top:1.5rem">Fluency analysis</h2>
+  <div id="loading" class="notice" role="status"><span class="spinner"></span>Loading analysis…</div>
+  <div th:replace="~{fragments :: results('/api/history/' + ${item.id} + '/audio')}"></div>
+
+  <form th:action="@{/history/{id}/delete(id=${item.id})}" method="post"
+        onsubmit="return confirm('Delete this recording and its analysis? This cannot be undone.')">
+    <div class="actions"><button class="btn danger" type="submit">Delete recording</button></div>
+  </form>
+</main>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/analysis.js}"></script>
+</body>
+</html>

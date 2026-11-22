@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <title th:text="${title} + ' · Voice Fluency Lab'">Voice Fluency Lab</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar" th:fragment="topbar">
+  <span class="brand">Voice Fluency Lab</span>
+  <nav><a th:href="@{/record}">New recording</a><a th:href="@{/history}">History</a></nav>
+  <form th:action="@{/logout}" method="post"><button class="btn ghost" type="submit">Log out</button></form>
+</header>
+<ol class="stepper" th:fragment="stepper(n)">
+  <li th:classappend="${n == 1} ? 'active' : (${n > 1} ? 'done')">Record</li>
+  <li th:classappend="${n == 2} ? 'active' : (${n > 2} ? 'done')">Transcript</li>
+  <li th:classappend="${n == 3} ? 'active'">Fluency analysis</li>
+</ol>
+<div th:fragment="results(audioUrl)" id="results" hidden>
+  <div id="metrics" class="metrics"></div>
+
+  <h2>Waveform</h2>
+  <div class="wave-box" id="waveBox">
+    <canvas id="wave" aria-label="Audio waveform with pauses highlighted" role="img"></canvas>
+    <div id="playhead"></div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--between)"></i>Gap between clauses</span>
+    <span><i style="background:var(--within)"></i>Gap within a clause</span>
+    <span class="muted">Click the waveform to jump to that moment.</span>
+  </div>
+  <audio id="player" controls th:src="@{${audioUrl}}"></audio>
+
+  <h2 style="margin-top:1.5rem">Pauses</h2>
+  <table>
+    <thead><tr><th>Starts at</th><th>Length</th><th>Kind</th></tr></thead>
+    <tbody id="pauseRows"></tbody>
+  </table>
+</div>
+</body>
+</html>

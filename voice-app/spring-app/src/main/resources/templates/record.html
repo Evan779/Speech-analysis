@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Record')}"></head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main>
+  <ol th:replace="~{fragments :: stepper(1)}"></ol>
+  <h1>Record your voice</h1>
+  <p class="muted">Speak naturally for up to 60 seconds. Recording stops by itself at the limit.</p>
+  <div class="card rec-wrap">
+    <button id="recBtn" type="button">Record</button>
+    <div id="timer" aria-live="off">00:00 / 01:00</div>
+    <div class="bar"><i></i></div>
+    <p id="msg" class="muted" role="status"></p>
+    <div id="preview" hidden>
+      <audio id="player" controls></audio>
+      <div class="actions" style="justify-content:center">
+        <button id="sendBtn" class="btn" type="button">Use this recording</button>
+        <button id="redoBtn" class="btn ghost" type="button">Discard</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/record.js}"></script>
+</body>
+</html>

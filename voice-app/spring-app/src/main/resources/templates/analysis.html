@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Fluency analysis')}"></head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main>
+  <ol th:replace="~{fragments :: stepper(3)}"></ol>
+  <h1>Speech fluency analysis</h1>
+  <div id="loading" class="notice" role="status"><span class="spinner"></span>Measuring pauses and speech…</div>
+  <div th:replace="~{fragments :: results('/api/recording/audio')}"></div>
+  <div class="actions"><a class="btn" th:href="@{/record}">Record another</a>
+    <a class="btn ghost" th:href="@{/transcript}">Back to transcript</a>
+    <a class="btn ghost" th:href="@{/history}">View history</a></div>
+  <p class="muted">This recording is saved in your history.</p>
+</main>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/analysis.js}"></script>
+</body>
+</html>

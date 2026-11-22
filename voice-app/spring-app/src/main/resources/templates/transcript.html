@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Transcript')}"></head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main>
+  <ol th:replace="~{fragments :: stepper(2)}"></ol>
+  <h1>Transcript</h1>
+  <div class="card">
+    <audio controls th:src="@{/api/recording/audio}"></audio>
+    <p id="status" class="muted" role="status"></p>
+    <label for="text">Your words</label>
+    <textarea id="text" readonly></textarea>
+    <div class="actions">
+      <button id="editBtn" class="btn ghost" type="button" disabled>Edit text</button>
+      <button id="resetBtn" class="btn ghost" type="button" disabled>Undo my edits</button>
+      <button id="retryBtn" class="btn ghost" type="button" hidden>Try transcription again</button>
+      <button id="nextBtn" class="btn" type="button" disabled>Analyse fluency</button>
+    </div>
+  </div>
+  <p><a th:href="@{/record}">Record again</a></p>
+</main>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/transcript.js}"></script>
+</body>
+</html>

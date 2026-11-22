@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('History')}"></head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main>
+  <h1>Your previous recordings</h1>
+  <div class="notice" th:if="${param.deleted}">Recording deleted.</div>
+  <div class="card" th:if="${#lists.isEmpty(items)}">
+    <p>You have no saved recordings yet.</p>
+    <a class="btn" th:href="@{/record}">Make your first recording</a>
+  </div>
+  <div class="card" th:unless="${#lists.isEmpty(items)}">
+    <table>
+      <thead><tr><th>Date</th><th>Transcript</th><th>Total</th><th>Speech</th><th>Silence</th><th>Fillers</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="i : ${items}">
+          <td class="num" th:text="${#temporals.format(i.createdAt, 'd MMM yyyy, HH:mm')}"></td>
+          <td th:text="${#strings.abbreviate(i.editedText, 70)}"></td>
+          <td class="num" th:text="${#numbers.formatDecimal(i.totalTime, 1, 1)} + ' s'"></td>
+          <td class="num" th:text="${#numbers.formatDecimal(i.speakingTime, 1, 1)} + ' s'"></td>
+          <td class="num" th:text="${#numbers.formatDecimal(i.silenceTime, 1, 1)} + ' s'"></td>
+          <td class="num" th:text="${i.filledPauses}"></td>
+          <td><a th:href="@{/history/{id}(id=${i.id})}">Open</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>
