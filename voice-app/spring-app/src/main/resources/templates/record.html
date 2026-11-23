@@ -6,11 +6,16 @@
 <main>
   <ol th:replace="~{fragments :: stepper(1)}"></ol>
   <h1>Record your voice</h1>
-  <p class="muted">Speak naturally for up to 60 seconds. Recording stops by itself at the limit.</p>
+  <p class="muted">Record up to 60 seconds, or upload an existing audio file.</p>
   <div class="card rec-wrap">
     <button id="recBtn" type="button">Record</button>
     <div id="timer" aria-live="off">00:00 / 01:00</div>
     <div class="bar"><i></i></div>
+    <p class="muted or">or</p>
+    <button id="uploadBtn" class="btn ghost" type="button">Upload an audio file</button>
+    <input id="fileInput" type="file" hidden
+           accept="audio/*,.mp3,.wav,.m4a,.mp4,.webm,.ogg,.oga,.flac,.aac">
+    <p class="muted small">MP3, WAV, M4A, WebM, OGG, FLAC or AAC. Up to 60 seconds and 25 MB.</p>
     <p id="msg" class="muted" role="status"></p>
     <div id="preview" hidden>
       <audio id="player" controls></audio>

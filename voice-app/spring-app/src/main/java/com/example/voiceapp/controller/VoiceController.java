@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.Principal;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -28,6 +29,11 @@ import java.util.Map;
 public class VoiceController {
     private static final String AUDIO = "audioFile", MIME = "audioMime", ORIGINAL = "whisperText",
             TEXT = "transcriptText", WORDS = "wordsJson", ANALYSIS = "analysisJson", REC_ID = "recordingId";
+
+    /** Accepted upload types: extension -> MIME type used for playback. */
+    private static final Map<String, String> TYPES = Map.of(
+            ".webm", "audio/webm", ".wav", "audio/wav", ".mp3", "audio/mpeg", ".m4a", "audio/mp4",
+            ".mp4", "audio/mp4", ".ogg", "audio/ogg", ".oga", "audio/ogg", ".flac", "audio/flac", ".aac", "audio/aac");
 
     private final AnalysisClient python;
     private final AudioStorage storage;
@@ -66,18 +72,22 @@ public class VoiceController {
     public ResponseEntity<?> upload(@RequestParam("audio") MultipartFile audio, HttpSession s) throws IOException {
         if (audio.isEmpty()) return ResponseEntity.badRequest().body(Map.of("error", "Empty recording"));
 
+        String name = audio.getOriginalFilename() == null ? "rec.webm" : audio.getOriginalFilename();
+        String ext = name.contains(".") ? name.substring(name.lastIndexOf('.')).toLowerCase(Locale.ROOT) : ".webm";
+        if (!TYPES.containsKey(ext))
+            return ResponseEntity.badRequest().body(Map.of("error", "Unsupported file type. Use MP3, WAV, M4A, WebM, OGG, FLAC or AAC."));
+
         // An abandoned, never-saved recording is deleted; saved ones belong to the history.
         String old = (String) s.getAttribute(AUDIO);
         if (old != null && s.getAttribute(REC_ID) == null) storage.delete(old);
         resetWorkflow(s);
 
-        String name = audio.getOriginalFilename() == null ? "rec.webm" : audio.getOriginalFilename();
-        String ext = name.contains(".") ? name.substring(name.lastIndexOf('.')).replaceAll("[^A-Za-z0-9.]", "") : ".webm";
         Path file = storage.create(ext);
         audio.transferTo(file);
 
         s.setAttribute(AUDIO, file.getFileName().toString());
-        s.setAttribute(MIME, audio.getContentType() == null ? "audio/webm" : audio.getContentType());
+        String ct = audio.getContentType();
+        s.setAttribute(MIME, ct != null && ct.startsWith("audio/") ? ct : TYPES.get(ext));
         return ResponseEntity.ok(Map.of("redirect", "/transcript"));
     }
 

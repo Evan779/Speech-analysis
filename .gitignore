@@ -1,0 +1,14 @@
+# IDE settings (launch.json holds your DB password)
+.vscode/
+.idea/
+.classpath
+.project
+.settings/
+
+# Python
+.venv/
+__pycache__/
+
+# Java build output
+target/
+*.class
