@@ -20,7 +20,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "base")   # tiny / base / small / medium / large
 SR = 16000                                            # analysis sample rate
-MIN_PAUSE = float(os.getenv("MIN_PAUSE", "0.25"))     # seconds of silence that counts as a pause
+MIN_PAUSE = float(os.getenv("MIN_PAUSE", "0.30"))     # seconds of silence that counts as a pause
 SILENCE_DB_BELOW_PEAK = float(os.getenv("SILENCE_DB", "25"))  # Praat-style: peak intensity minus N dB
 CLAUSE_END = re.compile(r"[,;:.!?\u2014\u2013-]$")    # punctuation that closes a clause
 # Matches common filled pauses; Whisper tends to drop them, so the prompt below nudges it to keep them.
